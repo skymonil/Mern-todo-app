@@ -49,12 +49,13 @@ return res.status(200).json({ message: "Task updated successfully", task: update
 
 router.delete('/deleteTask/:id',async(req,res)=>{
     try {
-    const {email }= await User.findOne({email});
+    const {email }= req.body 
+      const existingUser= await User.findOne({email});
     if(existingUser){
 await List.findByIdAndDelete(req.params.id).then(()=>
 res.status(200).json({message: "Task Deleted"}))
     }    
-    
+
     } catch (error) {
         console.log(error);
         
