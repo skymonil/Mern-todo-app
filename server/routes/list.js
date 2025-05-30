@@ -47,19 +47,30 @@ return res.status(200).json({ message: "Task updated successfully", task: update
  
 })
 
-router.delete('/deleteTask/:id',async(req,res)=>{
+router.delete('/deleteTask/:id', async (req, res) => {
     try {
-    const {email }= req.body 
-      const existingUser= await User.findOne({email});
-    if(existingUser){
-await List.findByIdAndDelete(req.params.id).then(()=>
-res.status(200).json({message: "Task Deleted"}))
-    }    
+        const { email } = req.body;
+        const taskId = req.params.id;
+
+        if (!email || !taskId) {
+            return res.status(400).json({ message: "Invalid request: Missing email or task ID" });
+        }
+
+        const existingUser = await User.findOne({ email });
+        if (!existingUser) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        const deletedTask = await List.findByIdAndDelete(taskId);
+        if (!deletedTask) {
+            return res.status(404).json({ message: "Task not found" });
+        }
+
+        res.status(200).json({ message: "✅ Task Deleted Successfully" });
 
     } catch (error) {
-        console.log(error);
-        
+        console.error("❌ Error deleting task:", error.message);
+        res.status(500).json({ message: "Server error, please try again later" });
     }
-    
-})
+});
 module.exports= router;
