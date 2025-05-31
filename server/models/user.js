@@ -12,7 +12,7 @@ const userSchema = new mongoose.Schema({
     },
     password: {
         type: String,
-        requried: true
+        required: true
     },
     list: [{
         type: mongoose.Types.ObjectId,

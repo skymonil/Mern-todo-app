@@ -49,14 +49,14 @@ return res.status(200).json({ message: "Task updated successfully", task: update
 
 router.delete('/deleteTask/:id', async (req, res) => {
     try {
-        const { email } = req.body;
+        const { email } = req.body
         const taskId = req.params.id;
 
         if (!email || !taskId) {
             return res.status(400).json({ message: "Invalid request: Missing email or task ID" });
         }
 
-        const existingUser = await User.findOne({ email });
+        const existingUser = await User.findOneAndUpdate({ email },{$pull:{list: req.params.id}});
         if (!existingUser) {
             return res.status(404).json({ message: "User not found" });
         }
